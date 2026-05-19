@@ -4,7 +4,8 @@ dotenv.config();
 
 const ENVS = [
     "PORT",
-    "MONGO_URI"
+    "MONGO_URI",
+    "JWT_SECRET"
 ]
 
 ENVS.forEach(env => {
@@ -16,3 +17,4 @@ ENVS.forEach(env => {
 
 export const mongoURI = process.env.MONGO_URI;
 export const port = process.env.PORT;
+export const jwtSecret = process.env.JWT_SECRET;
