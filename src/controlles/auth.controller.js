@@ -1,4 +1,5 @@
 import { Alumno } from "../models/alumno.js";
+import { generateToken } from "../services/jwt.service.js";
 
 export class AuthController {
 
@@ -18,9 +19,12 @@ export class AuthController {
                 return res.status(404).json({ message: "Alumno no encontrado" });
             }
 
+            const token = generateToken({ id: alumno._id, name: alumno.name });
+
             return res.status(200).json({
                 msj: "Login exitoso",
-                data: alumno
+                data: alumno,
+                token
             });
         } catch (error) {
 
@@ -36,15 +40,16 @@ export class AuthController {
             return res.status(400).json({ message: "Faltan campos obligatorios" });
         }
 
+        if(carnet.length !== 8){
+            return res.status(400).json({ message: "El carnet debe tener 8 caracteres" });
+        } 
+
         const alumnoExist = await Alumno.findOne({ carnet });
 
         if(alumnoExist){
             return res.status(400).json({ message: "El carnet ya está registrado" });
-        }
-
-        if(carnet.length !== 8){
-            return res.status(400).json({ message: "El carnet debe tener 8 caracteres" });
-        }   
+        } 
+        
         try {
             
             const newAlumno = await Alumno.create({ name, carnet, carrera });
